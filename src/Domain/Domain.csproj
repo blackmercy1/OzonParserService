@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>OzonParserService.Domain</RootNamespace>
+    <AssemblyName>OzonParserService.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ErrorOr" />
+    <PackageReference Include="MediatR" />
+  </ItemGroup>
+
+</Project>
