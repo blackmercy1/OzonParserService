@@ -1,13 +1,11 @@
 using AutoMapper;
-using Contracts.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonParserService.Application.Tasks.Commands;
+using OzonParserService.Application.ParsingTasks.Commands;
+using OzonParserService.Contracts.Tasks;
 
 namespace OzonParserService.Web.Controllers;
 
-[ApiController]
-[Route("api/tasks")]
 public class ParserTaskController : ApiController
 {
     private readonly IMapper _mapper; 
@@ -26,8 +24,8 @@ public class ParserTaskController : ApiController
     {
         var createTaskRequest = _mapper.Map<CreateParserTaskCommand>(request);
         var result = await _mediator.Send(createTaskRequest);
-        
-        
+
+        return Ok();
     }
 
     // [HttpGet("{id}")]
