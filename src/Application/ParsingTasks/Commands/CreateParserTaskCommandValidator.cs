@@ -1,7 +1,7 @@
 using FluentValidation;
 using JetBrains.Annotations;
 
-namespace OzonParserService.Application.Tasks.Commands;
+namespace OzonParserService.Application.ParsingTasks.Commands;
 
 [UsedImplicitly]
 public class CreateParserTaskCommandValidator : AbstractValidator<CreateParserTaskCommand>
@@ -9,11 +9,9 @@ public class CreateParserTaskCommandValidator : AbstractValidator<CreateParserTa
     public CreateParserTaskCommandValidator()
     {
         RuleFor(x => x.ProductUrl)
-            .NotEmpty()
-            .MaximumLength(50);
-        
+            .NotEmpty();
+
         RuleFor(x => x.IntervalHours)
-            .NotEmpty()
-            .GreaterThan(0);
+            .NotEmpty();
     }
 }
