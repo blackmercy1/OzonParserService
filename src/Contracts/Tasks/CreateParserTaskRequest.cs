@@ -1,3 +1,5 @@
-namespace Contracts.Tasks;
+namespace OzonParserService.Contracts.Tasks;
 
-public record CreateParserTaskRequest();
+public record CreateParserTaskRequest(
+    string ProductUrl,
+    TimeSpan IntervalHours);
