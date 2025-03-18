@@ -1,4 +1,4 @@
-namespace OzonParserService.Domain.Common;
+namespace OzonParserService.Domain.Common.ValueObjects;
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
