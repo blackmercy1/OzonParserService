@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>OzonParserService.Infrastructure</RootNamespace>
     <AssemblyName>OzonParserService.Infrastructure</AssemblyName>
+    <UserSecretsId>a430e741-05c0-475c-ac26-975fb02d9635</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
