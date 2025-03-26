@@ -1,5 +1,3 @@
-using OzonParserService.Domain.Common.ValueObjects;
-
 namespace OzonParserService.Domain.Common;
 
 public abstract class Entity<TId> : 
