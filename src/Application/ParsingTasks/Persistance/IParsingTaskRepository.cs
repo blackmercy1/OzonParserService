@@ -13,11 +13,11 @@ public interface IParsingTaskRepository
         DateTime currentTime,
         CancellationToken cancellationToken = default);
 
-    Task AddAsync(
+    Task<ParsingTask> AddAsync(
         ParsingTask task,
         CancellationToken cancellationToken = default);
 
-    Task UpdateByIdAsync(
+    Task<ParsingTask> UpdateByIdAsync(
         ParsingTask task,
         ParsingTaskId id,
         CancellationToken cancellationToken = default);

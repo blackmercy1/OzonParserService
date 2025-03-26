@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Hosting;
-using OzonParserService.Domain.ParserTaskAggregate;
-
 namespace OzonParserService.Application.ParsingScheduler.Services;
 
 public class ParsingScheduler

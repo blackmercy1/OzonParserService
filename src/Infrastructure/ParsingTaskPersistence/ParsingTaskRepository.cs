@@ -25,16 +25,19 @@ public class ParsingTaskRepository : IParsingTaskRepository
         DateTime currentTime,
         CancellationToken cancellationToken) =>
         await _context.ParsingTasks
-            .Where(t => t.NextRun <= currentTime && t.Status != ParserTaskStatus.Running)
+            .Where(t => t.NextRun <= currentTime 
+                        && t.Status != ParserTaskStatus.Running 
+                        && t.Status != ParserTaskStatus.Completed)
             .OrderBy(t => t.NextRun)
             .ToListAsync(cancellationToken: cancellationToken);
 
-    public async Task AddAsync(
+    public async Task<ParsingTask> AddAsync(
         ParsingTask task,
-        CancellationToken cancellationToken) 
+        CancellationToken cancellationToken)
     {
         _logger.LogInformation("Adding new parsing task");
-        await _context.ParsingTasks.AddAsync(task, cancellationToken);
+        var addedEntity = await _context.ParsingTasks.AddAsync(task, cancellationToken);
+        return addedEntity.Entity;
     }
     
     public async Task<ParsingTask?> GetByIdAsync(
@@ -51,7 +54,7 @@ public class ParsingTaskRepository : IParsingTaskRepository
         return parsingTaskById;
     }
 
-    public async Task UpdateByIdAsync(
+    public async Task<ParsingTask> UpdateByIdAsync(
         ParsingTask task,
         ParsingTaskId id, 
         CancellationToken cancellationToken)

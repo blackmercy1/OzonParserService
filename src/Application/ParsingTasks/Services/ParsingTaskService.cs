@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 
 using OzonParserService.Application.ParsingTasks.Persistance;
 using OzonParserService.Application.ProductParsers.Services;
+using OzonParserService.Application.RabbitMq.Services;
 using OzonParserService.Domain.ParserTaskAggregate;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 
@@ -12,19 +13,23 @@ public class ParsingTaskService : IParsingTaskService
 {
     private readonly IParsingTaskRepository _parsingTaskRepository;
     private readonly IProductParserService _productParserService;
+    private readonly IParsingTaskRabbitMQProducerService _parsingTaskRabbitMQProducerService;
+    
     private readonly ILogger<ParsingTaskService> _logger;
 
     public ParsingTaskService(
         IParsingTaskRepository parsingTaskRepository,
         IProductParserService productParserService,
+        IParsingTaskRabbitMQProducerService parsingTaskRabbitMQProducerService,
         ILogger<ParsingTaskService> logger)
     {
         _parsingTaskRepository = parsingTaskRepository;
         _productParserService = productParserService;
+        _parsingTaskRabbitMQProducerService = parsingTaskRabbitMQProducerService;
         _logger = logger;
     }
 
-    public async Task<ErrorOr<Success>> ScheduleTaskAsync(
+    public async Task<ErrorOr<ParsingTask>> ScheduleTaskAsync(
         string url,
         TimeSpan interval,
         CancellationToken cancellationToken)
@@ -36,12 +41,12 @@ public class ParsingTaskService : IParsingTaskService
                 checkInterval: interval
             );
 
-            await _parsingTaskRepository.AddAsync(task, cancellationToken);
+            var parsingTask = await _parsingTaskRepository.AddAsync(task, cancellationToken); 
             await _parsingTaskRepository.SaveChangesAsync(cancellationToken);
             
             _logger.LogInformation("Task is scheduled.");
             
-            return Result.Success;
+            return parsingTask;
         }
 
         catch (Exception ex)
@@ -69,9 +74,12 @@ public class ParsingTaskService : IParsingTaskService
         await _parsingTaskRepository.UpdateByIdAsync(task, parsingTaskId, cancellationToken);
         
         var productData = await _productParserService.ParserAsync(task.ProductUrl);
-        //TODO: посылаем дату в другой микрач с помощью броккера
-
+        // await _parsingTaskRabbitMQProducerService.SendMessage(productData);
+        
+        task.Complete();
+        
         await _parsingTaskRepository.SaveChangesAsync(cancellationToken);
+        
         return Result.Success;
     }
 

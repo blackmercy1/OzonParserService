@@ -1,6 +1,7 @@
 using ErrorOr;
-using OzonParserService.Domain.ProductDataAggregate;
 using PuppeteerSharp;
+
+using OzonParserService.Domain.ProductDataAggregate;
 
 namespace OzonParserService.Application.ProductParsers.Services;
 

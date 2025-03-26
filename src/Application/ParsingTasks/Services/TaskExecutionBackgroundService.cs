@@ -29,12 +29,12 @@ public class TaskExecutionBackgroundService : BackgroundService
                     var repository = scope.ServiceProvider.GetRequiredService<IParsingTaskRepository>();
                     var taskService = scope.ServiceProvider.GetRequiredService<IParsingTaskService>();
 
-                    var tasks = await repository.GetDueTasksAsync(DateTime.UtcNow);
+                    var tasks = await repository.GetDueTasksAsync(
+                        DateTime.UtcNow,
+                        cancellationToken);
                     
-                    foreach (var task in tasks)
-                    {
+                    foreach (var task in tasks) 
                         await taskService.ExecuteTaskAsync(task.Id.Value, cancellationToken);
-                    }
                 }
                 catch (Exception ex)
                 {
