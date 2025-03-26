@@ -1,5 +1,6 @@
 using ErrorOr;
 using MediatR;
+
 using OzonParserService.Application.ParsingTasks.Services;
 using OzonParserService.Domain.ParserTaskAggregate;
 
@@ -24,6 +25,6 @@ public class CreateParserTaskCommandHandler
             interval: request.IntervalHours, 
             cancellationToken: cancellationToken);
         
-        return Error.Failure("some", "some");
+        return parsingTask;
     }
 }
