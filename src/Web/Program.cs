@@ -1,24 +1,17 @@
 using OzonParserService.Application;
 using OzonParserService.Infrastructure.Common.DI;
 using OzonParserService.Web.Common.DI;
+using OzonParserService.Web.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder
-    .AddWebServices()
-    .AddInfrastructureServices(builder.Configuration)
-    .AddApplicationServices(builder.Configuration);
+builder.Services
+    .AddWeb()
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication(builder.Configuration);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseRouting();
-app.UseHttpsRedirection();
-app.MapControllers();
+app.Configure();
 
 app.Run();

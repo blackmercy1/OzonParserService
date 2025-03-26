@@ -5,7 +5,6 @@ using MediatR;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 using OzonParserService.Application.Common.Behaviours;
 using OzonParserService.Application.ParsingTasks.Services;
@@ -17,34 +16,34 @@ namespace OzonParserService.Application;
 
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder AddApplicationServices(
-        this IHostApplicationBuilder builder,
+    public static IServiceCollection AddApplication(
+        this IServiceCollection services,
         IConfiguration configuration)
     {
-        builder.Services
+        services
             .AddScoped<IParsingTaskService, ParsingTaskService>()
             .AddScoped<IProductParserService, ProductParserService>()
             .AddSingleton<IParsingTaskRabbitMQProducerService, ParsingTaskRabbitMQProducerService>()
             .AddHostedService<TaskExecutionBackgroundService>();
         
-        builder.Services
+        services
             .AddScoped(
                 typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehavior<,>));
         
-        builder.Services.
-            Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQ"));
+        services.
+            Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQ"));
 
-        builder.Services.AddMassTransitServices(configuration);
+        services.AddMassTransitServices(configuration);
         
-        builder.Services
+        services
             .AddMediatR(cfg
                 => cfg.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
         
-        builder.Services
+        services
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         
-        return builder;
+        return services;
     }
     
     private static IServiceCollection AddMassTransitServices(

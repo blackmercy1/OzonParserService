@@ -10,18 +10,18 @@ namespace OzonParserService.Web.Common.DI;
 
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder AddWebServices(
-        this IHostApplicationBuilder builder)
+    public static IServiceCollection AddWeb(
+        this IServiceCollection services)
     {
-        builder.Services
+        services
             .AddControllers()
             .AddNewtonsoftJson();
 
-        builder.Services.AddEndpointsApiExplorer();
+        services.AddEndpointsApiExplorer();
 
-        builder.Services.AddSingleton<ProblemDetailsFactory, ParserProblemDetailsFactory>();
+        services.AddSingleton<ProblemDetailsFactory, ParserProblemDetailsFactory>();
 
-        builder.Services
+        services
             .AddFluentValidation()
             .AddAutoMapper()
             .AddSwagger()
@@ -33,7 +33,7 @@ public static class DependencyInjection
                     .AllowAnyHeader());
             });
 
-        return builder;
+        return services;
     }
 
     private static IServiceCollection AddSwagger(

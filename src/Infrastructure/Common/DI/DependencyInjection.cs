@@ -12,24 +12,23 @@ namespace OzonParserService.Infrastructure.Common.DI;
 
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder AddInfrastructureServices(
-        this IHostApplicationBuilder builder,
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
         ConfigurationManager configurationManager)
     {
-        builder.Services.AddPersistance(builder, configurationManager);
-        return builder;
+        services.AddPersistance(configurationManager);
+        return services;
     }
 
     private static IServiceCollection AddPersistance(
         this IServiceCollection services,
-        IHostApplicationBuilder builder,
         ConfigurationManager configurationManager)
     {
         configurationManager.AddUserSecrets(Assembly.GetExecutingAssembly());
         
         services.AddDbContext<OzonDbContext>(options =>
         {
-            options.UseNpgsql(builder.Configuration["ConnectionStrings:ParserTasks"]);
+            options.UseNpgsql(configurationManager["ConnectionStrings:ParserTasks"]);
         });
         
         services.AddScoped<IParsingTaskRepository, ParsingTaskRepository>();
