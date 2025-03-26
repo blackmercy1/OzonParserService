@@ -62,8 +62,10 @@ public class ParsingTaskRepository : IParsingTaskRepository
         var parsingTask = await GetByIdAsync(id, cancellationToken);
 
         _context.Entry(parsingTask!).CurrentValues.SetValues(task);
-
+        
         _logger.LogInformation($"Parsing task with this {id} was updated");
+        
+        return parsingTask!;
     }
 
     public async Task DeleteByIdAsync(
