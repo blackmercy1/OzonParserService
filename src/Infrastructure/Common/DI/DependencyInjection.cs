@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,19 +12,24 @@ namespace OzonParserService.Infrastructure.Common.DI;
 
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder AddInfrastructureServices(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddInfrastructureServices(
+        this IHostApplicationBuilder builder,
+        ConfigurationManager configurationManager)
     {
-        builder.Services.AddPersistance(builder);
+        builder.Services.AddPersistance(builder, configurationManager);
         return builder;
     }
 
     private static IServiceCollection AddPersistance(
         this IServiceCollection services,
-        IHostApplicationBuilder builder)
+        IHostApplicationBuilder builder,
+        ConfigurationManager configurationManager)
     {
+        configurationManager.AddUserSecrets(Assembly.GetExecutingAssembly());
+        
         services.AddDbContext<OzonDbContext>(options =>
         {
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            options.UseNpgsql(builder.Configuration["ConnectionStrings:ParserTasks"]);
         });
         
         services.AddScoped<IParsingTaskRepository, ParsingTaskRepository>();
