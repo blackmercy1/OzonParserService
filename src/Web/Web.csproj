@@ -25,10 +25,5 @@
     <PackageReference Include="FluentValidation.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\api\specification.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
-  </ItemGroup>
   
 </Project>
