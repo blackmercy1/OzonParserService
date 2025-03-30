@@ -1,0 +1,61 @@
+services:
+  hangfire.postgres:
+    container_name: hangfire.postgres
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: hangfire_db
+      POSTGRES_USER: rmuser
+      POSTGRES_PASSWORD: rmpassword
+    volumes:
+      - hangfire_data:/var/lib/postgresql/data
+
+  parser.db_container:
+    container_name: parser.db
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: parser_db
+      POSTGRES_USER: rmuser
+      POSTGRES_PASSWORD: rmpassword
+    volumes:
+      - parser_data:/var/lib/postgresql/data
+
+  product.db:
+    container_name: product.db
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: product_data_db
+      POSTGRES_USER: rmuser  
+      POSTGRES_PASSWORD: rmpassword
+    volumes:
+      - product_data:/var/lib/postgresql/data
+
+  ozon-parser-mq:
+    container_name: ozon.parser.mq
+    image: rabbitmq:management
+    ports:
+      - "15672:15672"  
+      - "5672:5672"    
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: superadmin
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  
+volumes:
+  hangfire_data:
+  parser_data:
+  product_data:
+  rabbitmq_data:
+  redis_data:

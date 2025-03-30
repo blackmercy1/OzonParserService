@@ -9,14 +9,35 @@ public class ProductData : AggregateRoot<ProductDataId>
     public decimal CurrentPrice { get; private set; }
     public string Url { get; private set; }
 
-    public ProductData(string externalId, string name, decimal currentPrice, string url)
+    private ProductData(
+        ProductDataId id,
+        string externalId,
+        string name,
+        decimal currentPrice,
+        string url)
     {
+        Id = id;
         ExternalId = externalId;
         Name = name;
         CurrentPrice = currentPrice;
         Url = url;
     }
-    
+
+    public static ProductData Create(
+        ProductDataId id,
+        string externalId,
+        string name,
+        decimal currentPrice,
+        string url)
+    {
+        return new ProductData(
+            id: id,
+            externalId: externalId,
+            name: name,
+            currentPrice: currentPrice,
+            url: url);
+    }
+
     public bool IsValid()
     {
         return !string.IsNullOrWhiteSpace(ExternalId)

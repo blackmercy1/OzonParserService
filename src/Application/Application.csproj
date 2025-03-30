@@ -9,8 +9,6 @@
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="JetBrains.Annotations" />
-    <PackageReference Include="MassTransit" />
-    <PackageReference Include="MassTransit.RabbitMQ" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />

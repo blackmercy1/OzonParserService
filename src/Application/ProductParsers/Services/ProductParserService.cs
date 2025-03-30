@@ -2,6 +2,7 @@ using ErrorOr;
 using PuppeteerSharp;
 
 using OzonParserService.Domain.ProductDataAggregate;
+using OzonParserService.Domain.ProductDataAggregate.ValueObject;
 
 namespace OzonParserService.Application.ProductParsers.Services;
 
@@ -23,6 +24,10 @@ public class ProductParserService : IProductParserService
         Console.WriteLine($"Заголовок: {title}");
         
         await browser.CloseAsync();
-        return new();
+        return ProductData.Create(
+            ProductDataId.CreateUnique(),
+            url,
+            title,
+            100, url);
     }
 }

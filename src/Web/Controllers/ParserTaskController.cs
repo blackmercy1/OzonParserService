@@ -8,9 +8,9 @@ namespace OzonParserService.Web.Controllers;
 
 public class ParserTaskController : ApiController
 {
-    private readonly IMapper _mapper; 
+    private readonly IMapper _mapper;
     private readonly ISender _mediator;
-    
+
     public ParserTaskController(
         IMapper mapper,
         ISender mediator)
@@ -25,12 +25,6 @@ public class ParserTaskController : ApiController
         var createTaskRequest = _mapper.Map<CreateParserTaskCommand>(request);
         var result = await _mediator.Send(createTaskRequest);
 
-        return Ok();
+        return result.Match(Ok, Problem);
     }
-
-    // [HttpGet("{id}")]
-    // public async Task<IActionResult> GetTaskAsync(string id)
-    // {
-    //     
-    // }
 }

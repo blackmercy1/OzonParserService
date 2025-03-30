@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 using OzonParserService.Application.ParsingTasks.Persistance;
 using OzonParserService.Application.ProductParsers.Services;
-using OzonParserService.Application.RabbitMq.Services;
+using OzonParserService.Application.Publish;
 using OzonParserService.Domain.ParserTaskAggregate;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 
@@ -13,19 +13,19 @@ public class ParsingTaskService : IParsingTaskService
 {
     private readonly IParsingTaskRepository _parsingTaskRepository;
     private readonly IProductParserService _productParserService;
-    private readonly IParsingTaskRabbitMQProducerService _parsingTaskRabbitMQProducerService;
-    
+    private readonly IProductDataPublisher _productDataPublisher;
+
     private readonly ILogger<ParsingTaskService> _logger;
 
     public ParsingTaskService(
         IParsingTaskRepository parsingTaskRepository,
         IProductParserService productParserService,
-        IParsingTaskRabbitMQProducerService parsingTaskRabbitMQProducerService,
+        IProductDataPublisher productDataPublisher,
         ILogger<ParsingTaskService> logger)
     {
         _parsingTaskRepository = parsingTaskRepository;
         _productParserService = productParserService;
-        _parsingTaskRabbitMQProducerService = parsingTaskRabbitMQProducerService;
+        _productDataPublisher = productDataPublisher;
         _logger = logger;
     }
 
@@ -71,14 +71,20 @@ public class ParsingTaskService : IParsingTaskService
 
         task.Start();
         
-        await _parsingTaskRepository.UpdateByIdAsync(task, parsingTaskId, cancellationToken);
-        
-        var productData = await _productParserService.ParserAsync(task.ProductUrl);
-        // await _parsingTaskRabbitMQProducerService.SendMessage(productData);
+        var productDataResult = await _productParserService.ParserAsync(task.ProductUrl);
+        if (productDataResult.IsError)
+        {
+            var errors = productDataResult.Errors;
+            _logger.LogError(errors.ToString());
+            return errors;
+        }
         
         task.Complete();
         
+        await _parsingTaskRepository.UpdateByIdAsync(task, parsingTaskId, cancellationToken);
         await _parsingTaskRepository.SaveChangesAsync(cancellationToken);
+        
+        await _productDataPublisher.PublishProductDataAsync(productDataResult.Value);
         
         return Result.Success;
     }
