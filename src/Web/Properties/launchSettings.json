@@ -10,7 +10,7 @@
   "profiles": {
     "OzonParserService.Web": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:5002;http://localhost:4999",
       "environmentVariables": {
