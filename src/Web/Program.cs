@@ -6,7 +6,7 @@ using OzonParserService.Web.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddWeb()
+    .AddWeb(builder)
     .AddInfrastructure(builder.Configuration)
     .AddApplication();
 

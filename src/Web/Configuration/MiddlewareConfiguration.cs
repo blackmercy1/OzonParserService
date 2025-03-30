@@ -1,4 +1,6 @@
+using Serilog;
 using Hangfire;
+
 using OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
 
 namespace OzonParserService.Web.Configuration;
@@ -21,7 +23,8 @@ public static class MiddlewareConfiguration
         app
             .UseHttpsRedirection()
             .UseRouting()
-            .UseHangfire();
+            .UseHangfire()
+            .UseSerilogRequestLogging();
         
         app.MapControllers();
 
