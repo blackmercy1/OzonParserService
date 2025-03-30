@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.IntegrationT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "src\Contracts\Contracts.csproj", "{7CF4742D-0B92-41CC-B33C-66321A19D57E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductDataContract", "..\..\ProductDataContract\ProductDataContract\ProductDataContract.csproj", "{9AAC807A-660A-4699-A376-13FC6B03E275}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{7CF4742D-0B92-41CC-B33C-66321A19D57E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CF4742D-0B92-41CC-B33C-66321A19D57E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CF4742D-0B92-41CC-B33C-66321A19D57E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AAC807A-660A-4699-A376-13FC6B03E275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AAC807A-660A-4699-A376-13FC6B03E275}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AAC807A-660A-4699-A376-13FC6B03E275}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AAC807A-660A-4699-A376-13FC6B03E275}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
