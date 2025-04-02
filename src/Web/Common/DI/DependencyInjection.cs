@@ -46,10 +46,14 @@ public static class DependencyInjection
         this IServiceCollection services,
         WebApplicationBuilder builder)
     {
+        var requstUri = "http://localhost:5046";
+        
         Log.Logger = new LoggerConfiguration()
+            .Enrich.WithProperty("microservice_name", "ozon_parser_service") 
+            .Enrich.FromLogContext()
             .WriteTo.Console()
             .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-            .Enrich.FromLogContext()
+            .WriteTo.DurableHttpUsingFileSizeRolledBuffers(requestUri: requstUri)
             .CreateLogger();
 
         builder.Host.UseSerilog();
@@ -57,27 +61,19 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddSwagger(
-        this IServiceCollection services)
-    {
-        services.AddSwaggerGen(c =>
+    private static IServiceCollection AddSwagger(this IServiceCollection services)
+        => services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc(
                 "v1",
                 new OpenApiInfo {Title = "Ozon parser API", Version = "v1"});
         });
-        return services;
-    }
 
     private static IServiceCollection AddFluentValidation(this IServiceCollection services)
-    {
-        services
+        => services
             .AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters()
             .AddValidatorsFromAssemblyContaining<CreateParserTaskCommandValidator>();
-
-        return services;
-    }
 
     private static IServiceCollection AddAutoMapper(this IServiceCollection services)
         => services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
