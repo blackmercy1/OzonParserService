@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 namespace OzonParserService.Application.ParsingTasks.Commands;
 
 [UsedImplicitly]
-public class CreateParserTaskCommandValidator : AbstractValidator<CreateParserTaskCommand>
+public class CreateParsingTaskCommandValidator : AbstractValidator<CreateParsingTaskCommand>
 {
-    public CreateParserTaskCommandValidator()
+    public CreateParsingTaskCommandValidator()
     {
         RuleFor(x => x.ProductUrl)
             .NotEmpty();

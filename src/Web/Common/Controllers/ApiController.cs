@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using OzonParserService.Web.Http;
 
-namespace OzonParserService.Web.Controllers;
+namespace OzonParserService.Web.Common.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

@@ -19,7 +19,6 @@ public static class DependencyInjection
             .AddScoped<IParsingTaskService, ParsingTaskService>()
             .AddScoped<IProductParserService, ProductParserService>()
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            // .AddHostedService<TaskExecutionBackgroundService>();
         
         services
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())

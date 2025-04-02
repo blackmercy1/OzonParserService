@@ -6,18 +6,18 @@ using OzonParserService.Domain.ParserTaskAggregate;
 
 namespace OzonParserService.Application.ParsingTasks.Commands;
 
-public class CreateParserTaskCommandHandler
-    : IRequestHandler<CreateParserTaskCommand, ErrorOr<ParsingTask>>
+public class CreateParsingTaskCommandHandler
+    : IRequestHandler<CreateParsingTaskCommand, ErrorOr<ParsingTask>>
 {
     private readonly IParsingTaskService _parsingTaskService;
 
-    public CreateParserTaskCommandHandler(IParsingTaskService parsingTaskService)
+    public CreateParsingTaskCommandHandler(IParsingTaskService parsingTaskService)
     {
         _parsingTaskService = parsingTaskService;
     }
     
     public async Task<ErrorOr<ParsingTask>> Handle(
-        CreateParserTaskCommand request,
+        CreateParsingTaskCommand request,
         CancellationToken cancellationToken)
     {
         var parsingTask = await _parsingTaskService.ScheduleTaskAsync(

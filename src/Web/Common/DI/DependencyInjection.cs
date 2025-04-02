@@ -37,8 +37,6 @@ public static class DependencyInjection
                     .AllowAnyHeader());
             });
 
-        builder.Host.UseSerilog();
-
         return builder.Services;
     }
 
@@ -46,17 +44,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         WebApplicationBuilder builder)
     {
-        var requstUri = "http://localhost:5046";
-        
         Log.Logger = new LoggerConfiguration()
-            .Enrich.WithProperty("microservice_name", "ozon_parser_service") 
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-            .WriteTo.DurableHttpUsingFileSizeRolledBuffers(requestUri: requstUri)
+            .ReadFrom.Configuration(builder.Configuration)
             .CreateLogger();
-
-        builder.Host.UseSerilog();
 
         return services;
     }
@@ -73,7 +63,7 @@ public static class DependencyInjection
         => services
             .AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters()
-            .AddValidatorsFromAssemblyContaining<CreateParserTaskCommandValidator>();
+            .AddValidatorsFromAssemblyContaining<CreateParsingTaskCommandValidator>();
 
     private static IServiceCollection AddAutoMapper(this IServiceCollection services)
         => services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
