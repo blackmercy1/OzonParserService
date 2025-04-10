@@ -1,5 +1,6 @@
 using AutoMapper;
 using JetBrains.Annotations;
+
 using OzonParserService.Application.ParsingTasks.Commands;
 using OzonParserService.Contracts.ParsingTask;
 using OzonParserService.Domain.ParserTaskAggregate;
@@ -12,6 +13,8 @@ public class ParserTaskMappingProfile : Profile
     public ParserTaskMappingProfile()
     {
         CreateMap<CreateParsingTaskRequest, CreateParsingTaskCommand>();
-        CreateMap<ParsingTask, ParsingTaskResponse>();
+        CreateMap<ParsingTask, ParsingTaskResponse>()
+            .ForMember(dest => dest.Status, 
+                opt => opt.MapFrom(src => src.Status.ToString()));
     }
 }
