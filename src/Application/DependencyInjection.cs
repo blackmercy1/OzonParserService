@@ -4,6 +4,7 @@ using MediatR;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using OzonParserService.Application.Common.Authentication;
 using OzonParserService.Application.Common.Behaviours;
 using OzonParserService.Application.ParsingTasks.Services;
 using OzonParserService.Application.ProductParsers.Services;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services
             .AddScoped<IParsingTaskService, ParsingTaskService>()
             .AddScoped<IProductParserService, ProductParserService>()
+            .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>()
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         
         services

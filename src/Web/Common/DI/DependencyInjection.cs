@@ -52,12 +52,15 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddSwagger(this IServiceCollection services)
-        => services.AddSwaggerGen(c =>
+    {
+        services.AddSwaggerGen(options =>
         {
-            c.SwaggerDoc(
-                "v1",
-                new OpenApiInfo {Title = "Ozon parser API", Version = "v1"});
+            options.SwaggerDoc("v1", new OpenApiInfo {Title = "Ozon parser API", Version = "v1"});
+            options.CustomSchemaIds(x => x.FullName);
         });
+        
+        return services;
+    }
 
     private static IServiceCollection AddFluentValidation(this IServiceCollection services)
         => services
