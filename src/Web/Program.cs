@@ -1,17 +1,20 @@
 using OzonParserService.Application;
-using OzonParserService.Web;
+using OzonParserService.Infrastructure.Common.DI;
+using OzonParserService.Web.Common.DI;
+using OzonParserService.Web.Configuration;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder
-    .AddApplicationServices()
-    .AddApplicationServices()
-    .AddWebServices();
+builder.Services
+    .AddWeb(builder)
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-app.UseExceptionHandler("/error");
-app.UseHttpsRedirection();
-//ToDo: make authorization
-app.MapControllers();
-await app.RunAsync();
+app.Configure();
+
+app.Run();

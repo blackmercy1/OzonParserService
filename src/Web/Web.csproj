@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>OzonParserService.Web</RootNamespace>
     <AssemblyName>OzonParserService.Web</AssemblyName>
+    <UserSecretsId>69eac042-bbd3-4fe0-848f-0a8f09160c30</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
@@ -22,12 +24,10 @@
     </PackageReference>
     <PackageReference Include="FluentValidation.AspNetCore" />
     <PackageReference Include="Serilog.AspNetCore" />
-    <PackageReference Include="Serilog.Sinks.Seq" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\api\specification.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Serilog.Sinks.Http" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
   
 </Project>
