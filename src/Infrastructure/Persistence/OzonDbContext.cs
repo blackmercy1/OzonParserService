@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OzonParserService.Domain.ParserTaskAggregate;
 
-namespace OzonParserService.Infrastructure.Persistance;
+namespace OzonParserService.Infrastructure.Persistence;
 
 public class OzonDbContext : DbContext
 {

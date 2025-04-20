@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using OzonParserService.Application.ParsingTasks.Persistance;
+using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Domain.ParserTaskAggregate;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
-using OzonParserService.Infrastructure.Persistance;
+using OzonParserService.Infrastructure.Persistence;
 
 namespace OzonParserService.Infrastructure.ParsingTaskPersistence;
 
@@ -60,7 +60,6 @@ public class ParsingTaskRepository : IParsingTaskRepository
         var parsingTask = await GetByIdAsync(id, cancellationToken);
 
         _context.Entry(parsingTask!).CurrentValues.SetValues(task);
-
         _logger.LogInformation($"Parsing task with this {id} was updated");
 
         return parsingTask!;

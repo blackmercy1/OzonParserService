@@ -1,11 +1,10 @@
 using MassTransit;
 using OzonParserService.Application.Common.Authentication;
-using ProductDataContract;
-
 using OzonParserService.Application.Publish;
 using OzonParserService.Domain.ProductDataAggregate;
+using ProductDataContract;
 
-namespace OzonParserService.Infrastructure.ProductDataPersistance.Publisher;
+namespace OzonParserService.Infrastructure.ProductDataPersistence.Publisher;
 
 public class ProductDataPublisher : IProductDataPublisher
 {

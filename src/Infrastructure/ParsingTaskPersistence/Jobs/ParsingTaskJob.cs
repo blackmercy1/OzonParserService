@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 using OzonParserService.Application.ParsingTasks.Jobs;
-using OzonParserService.Application.ParsingTasks.Persistance;
+using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Application.ParsingTasks.Services;
 
 namespace OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
@@ -27,7 +27,7 @@ public class ParsingTaskJob : IJob
         {
             var tasks = await _repository.GetDueTasksAsync(DateTime.UtcNow, cancellationToken);
 
-            foreach (var task in tasks) 
+            foreach(var task in tasks) 
                 await _taskService.ExecuteTaskAsync(task.Id.Value, cancellationToken);
         }
         catch (Exception ex)

@@ -1,7 +1,7 @@
 using OzonParserService.Domain.ParserTaskAggregate;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 
-namespace OzonParserService.Application.ParsingTasks.Persistance;
+namespace OzonParserService.Application.ParsingTasks.Persistence;
 
 public interface IParsingTaskRepository
 {

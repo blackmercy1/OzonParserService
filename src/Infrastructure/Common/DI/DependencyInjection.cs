@@ -10,15 +10,14 @@ using Microsoft.IdentityModel.Tokens;
 
 using OzonParserService.Application.Common.DateTimeProvider;
 using OzonParserService.Application.ParsingTasks.Jobs;
-using OzonParserService.Application.ParsingTasks.Persistance;
+using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Application.Publish;
 
 using OzonParserService.Infrastructure.Common.DateTime;
 using OzonParserService.Infrastructure.ParsingTaskPersistence;
 using OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
-using OzonParserService.Infrastructure.Persistance;
-
-using OzonParserService.Infrastructure.ProductDataPersistance.Publisher;
+using OzonParserService.Infrastructure.Persistence;
+using OzonParserService.Infrastructure.ProductDataPersistence.Publisher;
 
 namespace OzonParserService.Infrastructure.Common.DI;
 
