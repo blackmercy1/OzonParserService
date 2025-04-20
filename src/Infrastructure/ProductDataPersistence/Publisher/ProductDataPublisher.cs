@@ -8,20 +8,20 @@ namespace OzonParserService.Infrastructure.ProductDataPersistence.Publisher;
 
 public class ProductDataPublisher : IProductDataPublisher
 {
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ITokenGenerator _tokenGenerator;
     private readonly IPublishEndpoint _publishEndpoint;
 
     public ProductDataPublisher(
         IPublishEndpoint publishEndpoint,
-        IJwtTokenGenerator jwtTokenGenerator)
+        ITokenGenerator tokenGenerator)
     {
         _publishEndpoint = publishEndpoint;
-        _jwtTokenGenerator = jwtTokenGenerator;
+        _tokenGenerator = tokenGenerator;
     }
     
     public async Task PublishProductDataAsync(ProductData productData)
     {
-        var token = _jwtTokenGenerator.GenerateToken();
+        var token = _tokenGenerator.GenerateToken();
         
         var productDataMessage = new ProductDataMessage(
             Id: productData.Id.Value,

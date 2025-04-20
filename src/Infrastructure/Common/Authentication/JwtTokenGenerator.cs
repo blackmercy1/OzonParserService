@@ -3,11 +3,12 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using OzonParserService.Application.Common.Authentication;
 using OzonParserService.Application.Common.DateTimeProvider;
 
-namespace OzonParserService.Application.Common.Authentication;
+namespace OzonParserService.Infrastructure.Common.Authentication;
 
-public class JwtTokenGenerator : IJwtTokenGenerator
+public class JwtTokenGenerator : ITokenGenerator
 {
     private readonly SymmetricSecurityKey _securityKey;
     private readonly IDateTimeProvider _timeProvider;

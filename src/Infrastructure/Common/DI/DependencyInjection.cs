@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-
+using OzonParserService.Application.Common.Authentication;
 using OzonParserService.Application.Common.DateTimeProvider;
 using OzonParserService.Application.ParsingTasks.Jobs;
 using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Application.Publish;
-
+using OzonParserService.Infrastructure.Common.Authentication;
 using OzonParserService.Infrastructure.Common.DateTime;
 using OzonParserService.Infrastructure.ParsingTaskPersistence;
 using OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
@@ -45,6 +45,7 @@ public static class DependencyInjection
             .AddScoped<IParsingTaskRepository, ParsingTaskRepository>()
             .AddScoped<IProductDataPublisher, ProductDataPublisher>()
             .AddScoped<IJob, ParsingTaskJob>()
+            .AddSingleton<ITokenGenerator, JwtTokenGenerator>()
             .AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         services.AddHangfire(cfg =>

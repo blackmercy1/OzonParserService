@@ -19,7 +19,6 @@ public static class DependencyInjection
         services
             .AddScoped<IParsingTaskService, ParsingTaskService>()
             .AddScoped<IProductParserService, ProductParserService>()
-            .AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>()
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         
         services

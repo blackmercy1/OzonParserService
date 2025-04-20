@@ -1,6 +1,6 @@
 namespace OzonParserService.Application.Common.Authentication;
 
-public interface IJwtTokenGenerator
+public interface ITokenGenerator
 {
     string GenerateToken();
 }
