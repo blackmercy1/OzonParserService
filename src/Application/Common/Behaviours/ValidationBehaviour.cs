@@ -1,7 +1,3 @@
-using ErrorOr;
-using FluentValidation;
-using MediatR;
-
 namespace OzonParserService.Application.Common.Behaviours;
 
 public class ValidationBehavior<TRequest, TResponse> :

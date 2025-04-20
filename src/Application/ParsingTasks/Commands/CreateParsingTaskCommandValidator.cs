@@ -1,6 +1,3 @@
-using FluentValidation;
-using JetBrains.Annotations;
-
 namespace OzonParserService.Application.ParsingTasks.Commands;
 
 [UsedImplicitly]

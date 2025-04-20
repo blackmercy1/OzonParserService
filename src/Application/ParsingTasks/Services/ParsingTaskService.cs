@@ -1,5 +1,3 @@
-using ErrorOr;
-using Microsoft.Extensions.Logging;
 using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Application.ProductParsers.Services;
 using OzonParserService.Application.Publish;

@@ -1,5 +1,3 @@
-using ErrorOr;
-using MediatR;
 using OzonParserService.Domain.ParserTaskAggregate;
 
 namespace OzonParserService.Application.ParsingTasks.Commands;

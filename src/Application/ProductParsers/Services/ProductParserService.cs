@@ -1,6 +1,3 @@
-using ErrorOr;
-using PuppeteerSharp;
-
 using OzonParserService.Domain.ProductDataAggregate;
 using OzonParserService.Domain.ProductDataAggregate.ValueObject;
 
