@@ -1,9 +1,6 @@
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Domain.ParserTaskAggregate;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
-using OzonParserService.Infrastructure.Persistence;
 
 namespace OzonParserService.Infrastructure.ParsingTaskPersistence;
 

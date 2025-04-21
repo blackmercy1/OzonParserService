@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using OzonParserService.Application.ParsingTasks.Jobs;
 using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Application.ParsingTasks.Services;

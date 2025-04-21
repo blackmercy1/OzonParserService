@@ -1,11 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using OzonParserService.Application.Common.Authentication;
-using OzonParserService.Application.Common.DateTimeProvider;
-
 namespace OzonParserService.Infrastructure.Common.Authentication;
 
 public class JwtTokenGenerator : ITokenGenerator

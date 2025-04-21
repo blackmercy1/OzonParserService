@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using OzonParserService.Domain.ParserTaskAggregate;
 
 namespace OzonParserService.Infrastructure.Persistence;
