@@ -1,6 +1,3 @@
-using Serilog;
-using Hangfire;
-
 using OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
 
 namespace OzonParserService.Web.Configuration;

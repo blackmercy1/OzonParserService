@@ -1,12 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
-using Serilog;
-
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.OpenApi.Models;
-
-using OzonParserService.Application.ParsingTasks.Commands;
-using OzonParserService.Web.Common.Errors;
+﻿using OzonParserService.Application.ParsingTasks.Commands;
 
 namespace OzonParserService.Web.Common.DI;
 

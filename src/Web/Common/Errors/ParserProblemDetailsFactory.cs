@@ -1,11 +1,3 @@
-using ErrorOr;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Options;
-using OzonParserService.Web.Http;
-using System.Diagnostics;
-
 namespace OzonParserService.Web.Common.Errors;
 
 public class ParserProblemDetailsFactory : ProblemDetailsFactory

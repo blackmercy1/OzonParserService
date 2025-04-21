@@ -1,8 +1,3 @@
-using ErrorOr;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using OzonParserService.Web.Http;
-
 namespace OzonParserService.Web.Common.Controllers;
 
 [ApiController]
@@ -32,7 +27,9 @@ public abstract class ApiController : ControllerBase
             _ => StatusCodes.Status500InternalServerError
         };
 
-        return Problem(statusCode: statusCode, title: error.Description);
+        return Problem(
+            statusCode: statusCode,
+            title: error.Description);
     }
 
     private IActionResult ValidationProblem(List<Error> errors)

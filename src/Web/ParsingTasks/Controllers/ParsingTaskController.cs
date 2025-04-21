@@ -1,9 +1,5 @@
-using AutoMapper;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using OzonParserService.Application.ParsingTasks.Commands;
 using OzonParserService.Contracts.ParsingTask;
-using OzonParserService.Web.Common.Controllers;
 
 namespace OzonParserService.Web.ParsingTasks.Controllers;
 

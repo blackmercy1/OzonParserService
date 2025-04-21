@@ -1,6 +1,3 @@
-using AutoMapper;
-using JetBrains.Annotations;
-
 using OzonParserService.Application.ParsingTasks.Commands;
 using OzonParserService.Contracts.ParsingTask;
 using OzonParserService.Domain.ParserTaskAggregate;
