@@ -6,26 +6,13 @@ using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 
 namespace OzonParserService.Application.ParsingTasks.Services;
 
-public class ParsingTaskService : IParsingTaskService
+public class ParsingTaskService(
+    IParsingTaskRepository parsingTaskRepository,
+    IProductParserService productParserService,
+    IProductDataPublisher productDataPublisher,
+    ILogger<ParsingTaskService> logger)
+    : IParsingTaskService
 {
-    private readonly IParsingTaskRepository _parsingTaskRepository;
-    private readonly IProductParserService _productParserService;
-    private readonly IProductDataPublisher _productDataPublisher;
-
-    private readonly ILogger<ParsingTaskService> _logger;
-
-    public ParsingTaskService(
-        IParsingTaskRepository parsingTaskRepository,
-        IProductParserService productParserService,
-        IProductDataPublisher productDataPublisher,
-        ILogger<ParsingTaskService> logger)
-    {
-        _parsingTaskRepository = parsingTaskRepository;
-        _productParserService = productParserService;
-        _productDataPublisher = productDataPublisher;
-        _logger = logger;
-    }
-
     public async Task<ErrorOr<ParsingTask>> ScheduleTaskAsync(
         string url,
         TimeSpan interval,
@@ -38,17 +25,17 @@ public class ParsingTaskService : IParsingTaskService
                 checkInterval: interval
             );
 
-            var parsingTask = await _parsingTaskRepository.AddAsync(task, cancellationToken); 
-            await _parsingTaskRepository.SaveChangesAsync(cancellationToken);
+            var parsingTask = await parsingTaskRepository.AddAsync(task, cancellationToken); 
+            await parsingTaskRepository.SaveChangesAsync(cancellationToken);
             
-            _logger.LogInformation("Task is scheduled.");
+            logger.LogInformation("Task is scheduled.");
             
             return parsingTask;
         }
 
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
+            logger.LogError(ex, ex.Message);
             return Error.Failure(description: "failed to schedule task");
         }
     }
@@ -58,30 +45,30 @@ public class ParsingTaskService : IParsingTaskService
         CancellationToken cancellationToken)
     {
         var parsingTaskId = ParsingTaskId.Create(taskId);
-        var task = await _parsingTaskRepository.GetByIdAsync(parsingTaskId, cancellationToken);
+        var task = await parsingTaskRepository.GetByIdAsync(parsingTaskId, cancellationToken);
         
         if (task == null)
         {
-            _logger.LogError($"Task with id {taskId} not found.");
+            logger.LogError($"Task with id {taskId} not found.");
             return Error.Failure(description: "task not found");
         }
 
         task.Start();
         
-        var productDataResult = await _productParserService.ParserAsync(task.ProductUrl);
+        var productDataResult = await productParserService.ParserAsync(task.ProductUrl);
         if (productDataResult.IsError)
         {
             var errors = productDataResult.Errors;
-            _logger.LogError(errors.ToString());
+            logger.LogError(errors.ToString());
             return errors;
         }
         
         task.Complete();
         
-        await _parsingTaskRepository.UpdateByIdAsync(task, parsingTaskId, cancellationToken);
-        await _parsingTaskRepository.SaveChangesAsync(cancellationToken);
+        await parsingTaskRepository.UpdateByIdAsync(task, parsingTaskId, cancellationToken);
+        await parsingTaskRepository.SaveChangesAsync(cancellationToken);
         
-        await _productDataPublisher.PublishProductDataAsync(productDataResult.Value);
+        await productDataPublisher.PublishProductDataAsync(productDataResult.Value);
         
         return Result.Success;
     }

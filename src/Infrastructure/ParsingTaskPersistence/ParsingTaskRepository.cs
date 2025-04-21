@@ -4,23 +4,14 @@ using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 
 namespace OzonParserService.Infrastructure.ParsingTaskPersistence;
 
-public class ParsingTaskRepository : IParsingTaskRepository
+public class ParsingTaskRepository(
+    ILogger<ParsingTaskRepository> logger,
+    OzonDbContext context) : IParsingTaskRepository
 {
-    private readonly ILogger<ParsingTaskRepository> _logger;
-    private readonly OzonDbContext _context;
-
-    public ParsingTaskRepository(
-        ILogger<ParsingTaskRepository> logger,
-        OzonDbContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
-
     public async Task<IEnumerable<ParsingTask>> GetDueTasksAsync(
         DateTime currentTime,
         CancellationToken cancellationToken) =>
-        await _context.ParsingTasks
+        await context.ParsingTasks
             .AsNoTracking()
             .Where(t => t.NextRun <= currentTime && (t.Status == ParserTaskStatus.Scheduled))
             .OrderBy(t => t.NextRun)
@@ -30,8 +21,8 @@ public class ParsingTaskRepository : IParsingTaskRepository
         ParsingTask task,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Adding new parsing task");
-        var addedEntity = await _context.ParsingTasks.AddAsync(task, cancellationToken);
+        logger.LogInformation("Adding new parsing task");
+        var addedEntity = await context.ParsingTasks.AddAsync(task, cancellationToken);
         return addedEntity.Entity;
     }
 
@@ -39,13 +30,13 @@ public class ParsingTaskRepository : IParsingTaskRepository
         ParsingTaskId id,
         CancellationToken cancellationToken = default)
     {
-        var parsingTaskById = await _context.ParsingTasks
+        var parsingTaskById = await context.ParsingTasks
             .FindAsync([id, cancellationToken], cancellationToken);
 
         if (parsingTaskById == null)
-            _logger.LogError($"Parsing task not found with this {id} was not found");
+            logger.LogError($"Parsing task not found with this {id} was not found");
 
-        _logger.LogInformation($"Parsing task found with this {id}");
+        logger.LogInformation($"Parsing task found with this {id}");
         return parsingTaskById;
     }
 
@@ -56,8 +47,8 @@ public class ParsingTaskRepository : IParsingTaskRepository
     {
         var parsingTask = await GetByIdAsync(id, cancellationToken);
 
-        _context.Entry(parsingTask!).CurrentValues.SetValues(task);
-        _logger.LogInformation($"Parsing task with this {id} was updated");
+        context.Entry(parsingTask!).CurrentValues.SetValues(task);
+        logger.LogInformation($"Parsing task with this {id} was updated");
 
         return parsingTask!;
     }
@@ -68,10 +59,10 @@ public class ParsingTaskRepository : IParsingTaskRepository
     {
         var parsingTask = await GetByIdAsync(id, cancellationToken);
 
-        _context.ParsingTasks.Remove(parsingTask!);
-        _logger.LogInformation($"Parsing task with this {id} was deleted");
+        context.ParsingTasks.Remove(parsingTask!);
+        logger.LogInformation($"Parsing task with this {id} was deleted");
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        => _context.SaveChangesAsync(cancellationToken);
+        => context.SaveChangesAsync(cancellationToken);
 }

@@ -2,22 +2,13 @@ using OzonParserService.Domain.ProductDataAggregate;
 
 namespace OzonParserService.Infrastructure.ProductDataPersistence.Publisher;
 
-public class ProductDataPublisher : IProductDataPublisher
+public class ProductDataPublisher(
+    IPublishEndpoint publishEndpoint,
+    ITokenGenerator tokenGenerator) : IProductDataPublisher
 {
-    private readonly ITokenGenerator _tokenGenerator;
-    private readonly IPublishEndpoint _publishEndpoint;
-
-    public ProductDataPublisher(
-        IPublishEndpoint publishEndpoint,
-        ITokenGenerator tokenGenerator)
-    {
-        _publishEndpoint = publishEndpoint;
-        _tokenGenerator = tokenGenerator;
-    }
-    
     public async Task PublishProductDataAsync(ProductData productData)
     {
-        var token = _tokenGenerator.GenerateToken();
+        var token = tokenGenerator.GenerateToken();
         
         var productDataMessage = new ProductDataMessage(
             Id: productData.Id.Value,
@@ -26,7 +17,7 @@ public class ProductDataPublisher : IProductDataPublisher
             CurrentPrice: productData.CurrentPrice,
             Url: productData.Url);
         
-        await _publishEndpoint.Publish(productDataMessage, context =>
+        await publishEndpoint.Publish(productDataMessage, context =>
         {
             context.Headers.Set("Authorization", $"Bearer {token}");
         });

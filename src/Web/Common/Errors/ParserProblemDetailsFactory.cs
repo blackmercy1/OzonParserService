@@ -1,13 +1,8 @@
 namespace OzonParserService.Web.Common.Errors;
 
-public class ParserProblemDetailsFactory : ProblemDetailsFactory
+public class ParserProblemDetailsFactory(IOptions<ApiBehaviorOptions>? options) : ProblemDetailsFactory
 {
-    private readonly ApiBehaviorOptions _options;
-
-    public ParserProblemDetailsFactory(IOptions<ApiBehaviorOptions>? options)
-    {
-        _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-    }
+    private readonly ApiBehaviorOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
 
     public override ProblemDetails CreateProblemDetails(
         HttpContext httpContext,

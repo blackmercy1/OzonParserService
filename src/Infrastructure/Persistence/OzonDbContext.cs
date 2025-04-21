@@ -2,13 +2,10 @@ using OzonParserService.Domain.ParserTaskAggregate;
 
 namespace OzonParserService.Infrastructure.Persistence;
 
-public class OzonDbContext : DbContext
+public class OzonDbContext(DbContextOptions<OzonDbContext> options) : DbContext(options)
 {
     public DbSet<ParsingTask> ParsingTasks { get; set; }
-    
-    public OzonDbContext(DbContextOptions<OzonDbContext> options) : base(options)
-    { }
-    
+
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
     {
