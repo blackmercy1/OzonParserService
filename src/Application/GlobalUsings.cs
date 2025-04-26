@@ -6,7 +6,6 @@ global using System.Threading.Tasks;
 global using FluentValidation;
 global using JetBrains.Annotations;
 global using Microsoft.Extensions.DependencyInjection;
-global using PuppeteerSharp;
 
 global using ErrorOr;
 global using MediatR;

@@ -20,6 +20,7 @@ global using System;
 global using MassTransit;
 
 global using Hangfire;
+global using PuppeteerSharp;
 global using Hangfire.PostgreSql;
 
 global using System.IdentityModel.Tokens.Jwt;

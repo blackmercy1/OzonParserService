@@ -2,7 +2,7 @@
 
 using OzonParserService.Application.Common.Behaviours;
 using OzonParserService.Application.ParsingTasks.Services;
-using OzonParserService.Application.ProductParsers.Services;
+using OzonParserService.Application.ProductParsers;
 
 namespace OzonParserService.Application;
 
@@ -13,7 +13,7 @@ public static class DependencyInjection
     {
         services
             .AddScoped<IParsingTaskService, ParsingTaskService>()
-            .AddScoped<IProductParserService, ProductParserService>()
+            .AddScoped<IBrowserProductDataParser, BrowserProductDataParser>()
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         
         services
