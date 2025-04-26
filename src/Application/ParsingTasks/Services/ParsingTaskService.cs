@@ -1,6 +1,5 @@
+using OzonParserService.Application.Common.DateTimeProvider;
 using OzonParserService.Application.ParsingTasks.Persistence;
-using OzonParserService.Application.ProductParsers.Services;
-using OzonParserService.Application.Publish;
 using OzonParserService.Domain.ParserTaskAggregate;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 
@@ -8,8 +7,7 @@ namespace OzonParserService.Application.ParsingTasks.Services;
 
 public class ParsingTaskService(
     IParsingTaskRepository parsingTaskRepository,
-    IProductParserService productParserService,
-    IProductDataPublisher productDataPublisher,
+    IDateTimeProvider dateTimeProvider,
     ILogger<ParsingTaskService> logger)
     : IParsingTaskService
 {
@@ -18,26 +16,21 @@ public class ParsingTaskService(
         TimeSpan interval,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var task = ParsingTask.Create(
-                productUrl: url,
-                checkInterval: interval
-            );
+        var task = ParsingTask.Create(
+            productUrl: url,
+            checkInterval: interval,
+            utcNow: dateTimeProvider.UtcNow
+        );
 
-            var parsingTask = await parsingTaskRepository.AddAsync(task, cancellationToken); 
-            await parsingTaskRepository.SaveChangesAsync(cancellationToken);
-            
-            logger.LogInformation("Task is scheduled.");
-            
-            return parsingTask;
-        }
+        var parsingTask = await parsingTaskRepository.AddAsync(
+            task,
+            cancellationToken);
+        
+        await parsingTaskRepository.SaveChangesAsync(cancellationToken);
 
-        catch (Exception ex)
-        {
-            logger.LogError(ex, ex.Message);
-            return Error.Failure(description: "failed to schedule task");
-        }
+        logger.LogInformation("Task is scheduled.");
+
+        return parsingTask;
     }
 
     public async Task<ErrorOr<Success>> ExecuteTaskAsync(
@@ -45,31 +38,25 @@ public class ParsingTaskService(
         CancellationToken cancellationToken)
     {
         var parsingTaskId = ParsingTaskId.Create(taskId);
-        var task = await parsingTaskRepository.GetByIdAsync(parsingTaskId, cancellationToken);
-        
-        if (task == null)
+        var task = await parsingTaskRepository.GetByIdAsync(
+            parsingTaskId,
+            cancellationToken);
+
+        if (task is null)
         {
             logger.LogError($"Task with id {taskId} not found.");
             return Error.Failure(description: "task not found");
         }
 
-        task.Start();
-        
-        var productDataResult = await productParserService.ParserAsync(task.ProductUrl);
-        if (productDataResult.IsError)
+        var result = task.Start();
+        if (result.IsError)
         {
-            var errors = productDataResult.Errors;
-            logger.LogError(errors.ToString());
-            return errors;
+            logger.LogError(result.Errors.ToString());
+            return result.Errors;
         }
         
-        task.Complete();
-        
-        await parsingTaskRepository.UpdateByIdAsync(task, parsingTaskId, cancellationToken);
         await parsingTaskRepository.SaveChangesAsync(cancellationToken);
-        
-        await productDataPublisher.PublishProductDataAsync(productDataResult.Value);
-        
+
         return Result.Success;
     }
 

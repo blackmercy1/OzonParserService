@@ -1,8 +1,10 @@
 ﻿using OzonParserService.Application.ParsingTasks.Jobs;
 using OzonParserService.Application.ParsingTasks.Persistence;
+using OzonParserService.Application.ProductScraper;
 using OzonParserService.Infrastructure.ParsingTaskPersistence;
 using OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
-using OzonParserService.Infrastructure.ProductDataPersistence.Publisher;
+using OzonParserService.Infrastructure.Persistence.Interceptors;
+using OzonParserService.Infrastructure.ProductData.Publisher;
 
 namespace OzonParserService.Infrastructure.Common.DI;
 
@@ -27,6 +29,8 @@ public static class DependencyInjection
             });
 
         services
+            .AddScoped<PublishDomainEventsInterceptor>()
+            .AddScoped<IProductScraper, ProductScraper.ProductScraper>()
             .AddScoped<IParsingTaskRepository, ParsingTaskRepository>()
             .AddScoped<IProductDataPublisher, ProductDataPublisher>()
             .AddScoped<IJob, ParsingTaskJob>()

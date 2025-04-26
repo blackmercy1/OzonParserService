@@ -20,19 +20,13 @@ public abstract class Entity<TId> :
         if (ReferenceEquals(this, obj)) 
             return true;
         
-        return obj.GetType() == this.GetType() && Equals((Entity<TId>) obj);
+        return obj.GetType() == GetType() && Equals((Entity<TId>) obj);
     }
     
-    public void AddDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
-    
-    public void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
-    }
-    
+    protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
+
     public bool Equals(Entity<TId>? other) => Equals((object?) other);
     public override int GetHashCode() => Id.GetHashCode();
 
