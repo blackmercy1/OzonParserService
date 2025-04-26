@@ -1,12 +1,10 @@
-using OzonParserService.Domain.ProductDataAggregate;
-
-namespace OzonParserService.Infrastructure.ProductDataPersistence.Publisher;
+namespace OzonParserService.Infrastructure.ProductData.Publisher;
 
 public class ProductDataPublisher(
     IPublishEndpoint publishEndpoint,
     ITokenGenerator tokenGenerator) : IProductDataPublisher
 {
-    public async Task PublishProductDataAsync(ProductData productData)
+    public async Task PublishProductDataAsync(Domain.ProductDataAggregate.ProductData productData)
     {
         var token = tokenGenerator.GenerateToken();
         
