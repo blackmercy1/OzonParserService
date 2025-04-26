@@ -1,5 +1,6 @@
 using OzonParserService.Domain.ParserTaskAggregate.DomainEvents;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
+using OzonParserService.Domain.ProductDataAggregate;
 
 namespace OzonParserService.Domain.ParserTaskAggregate;
 
@@ -17,22 +18,24 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
         ParsingTaskId id,
         string productUrl,
         string externalProductId,
-        TimeSpan checkInterval)
+        TimeSpan checkInterval,
+        DateTime utcNow)
         : base(id)
     {
         ProductUrl = productUrl;
         CheckInterval = checkInterval;
         ExternalProductId = externalProductId;
         Status = ParserTaskStatus.Scheduled;
-        LastRun = DateTime.UtcNow;
-        NextRun = CalculateNextRun();
+        LastRun = utcNow;
+        NextRun = CalculateNextRun(utcNow);
 
         AddDomainEvent(new ParserTaskCreatedEvent(Id));
     }
 
     public static ParsingTask Create(
         string productUrl,
-        TimeSpan checkInterval)
+        TimeSpan checkInterval,
+        DateTime utcNow)
     {
         if (!IsValidOzonUrl(productUrl))
             throw new ArgumentException(
@@ -45,33 +48,41 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
             id: ParsingTaskId.CreateUnique(),
             productUrl: productUrl,
             externalProductId: externalId,
-            checkInterval: checkInterval
+            checkInterval: checkInterval,
+            utcNow: utcNow
         );
     }
 
-    public void Start()
+    public ErrorOr<Success> Start()
     {
-        if (Status != ParserTaskStatus.Scheduled)
-            throw new InvalidOperationException("Task can only be started from Scheduled state");
-
         Status = ParserTaskStatus.Running;
         LastRun = DateTime.UtcNow;
+
+        AddDomainEvent(new ParserTaskStartedEvent(this));
+        return Result.Success;
     }
 
-    public void Complete()
+    public ErrorOr<Success> Complete(
+        ProductData productData,
+        DateTime utcNow)
     {
         Status = ParserTaskStatus.Completed;
-        NextRun = CalculateNextRun();
+        NextRun = CalculateNextRun(utcNow);
+
+        AddDomainEvent(
+            new ParserTaskCompletedEvent(
+                this,
+                productData));
+        return Result.Success;
     }
 
-    public void UpdateLastRunTime(DateTime time) => LastRun = time;
-
-    public void Fail(string error)
+    public ErrorOr<Success> Fail(string error)
     {
         Status = ParserTaskStatus.Failed;
+        return Result.Success;
     }
 
-    private DateTime CalculateNextRun() => DateTime.UtcNow.Add(CheckInterval);
+    private DateTime CalculateNextRun(DateTime currentTime) => currentTime.Add(CheckInterval);
 
     private static string ExtractExternalId(string url)
     {
@@ -86,7 +97,8 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
         Uri.TryCreate(
             url,
             UriKind.Absolute,
-            out var uri) && uri.Host.Contains("ozon.ru");
+            out var uri)
+        && uri.Host.Contains("ozon.ru");
 
 #pragma warning disable CS8618
     private ParsingTask()
