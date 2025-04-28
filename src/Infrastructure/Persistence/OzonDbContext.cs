@@ -22,6 +22,7 @@ public class OzonDbContext(
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder
+            .UseSnakeCaseNamingConvention()
             .AddInterceptors(publishDomainEventsInterceptor);
 
         base.OnConfiguring(optionsBuilder);

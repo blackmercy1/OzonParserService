@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+    <PackageVersion Include="EFCore.NamingConventions" Version="9.0.0" />
     <PackageVersion Include="ErrorOr" Version="2.0.1" />
     <PackageVersion Include="FluentAssertions" Version="6.12.2" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />

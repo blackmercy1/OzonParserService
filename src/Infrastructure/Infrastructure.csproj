@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" />
     <PackageReference Include="Hangfire" />
     <PackageReference Include="Hangfire.PostgreSql" />
     <PackageReference Include="MassTransit" />
@@ -25,6 +26,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\ProductDataContract\ProductDataContract\ProductDataContract.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20250428063650_AddOutboxMessageMigraion.cs" />
+    <Compile Remove="Migrations\20250428063650_AddOutboxMessageMigraion.Designer.cs" />
   </ItemGroup>
 
 </Project>
