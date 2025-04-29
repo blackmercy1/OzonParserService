@@ -13,10 +13,10 @@ public class ParsingTaskCompleteEventHandler(
         ParserTaskCompletedEvent notification,
         CancellationToken cancellationToken)
     {
-        var parsingTask = notification.ParsingTask;
+        var parsingTask = await parsingTaskRepository.GetByIdAsync(notification.ParsingTaskId, cancellationToken);
         var productData = notification.ProductData;
         
-        await parsingTaskRepository.UpdateByIdAsync(parsingTask, parsingTask.Id, cancellationToken);
+        await parsingTaskRepository.UpdateByIdAsync(parsingTask!, parsingTask!.Id, cancellationToken);
         await parsingTaskRepository.SaveChangesAsync(cancellationToken);
         
         await productDataPublisher.PublishProductDataAsync(productData);

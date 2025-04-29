@@ -17,18 +17,18 @@ public class ParsingTaskStartedEventHandler(
         ParserTaskStartedEvent notification,
         CancellationToken cancellationToken)
     {
-        var parsingTask = notification.ParsingTask;
+        var parsingTask = await parsingTaskRepository.GetByIdAsync(notification.Id, cancellationToken);
 
-        var productDataResult = await browserProductDataParser.ParseAsync(parsingTask.ProductUrl);
+        var productDataResult = await browserProductDataParser.ParseAsync(parsingTask!.ProductUrl);
         if (productDataResult.IsError)
         {
             var errors = productDataResult.Errors;
             logger.LogError(errors.ToString());
         }
+
+        parsingTask.Complete(productDataResult.Value, dateTimeProvider.UtcNow);
         
         await parsingTaskRepository.UpdateByIdAsync(parsingTask, parsingTask.Id, cancellationToken);
         await parsingTaskRepository.SaveChangesAsync(cancellationToken);
-
-        parsingTask.Complete(productDataResult.Value, dateTimeProvider.UtcNow);
     }
 }
