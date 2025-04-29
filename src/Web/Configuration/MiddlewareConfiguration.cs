@@ -1,4 +1,5 @@
-using OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
+using OzonParserService.Application.Outbox.Jobs;
+using OzonParserService.Application.ParsingTasks.Jobs;
 
 namespace OzonParserService.Web.Configuration;
 
@@ -32,9 +33,14 @@ public static class MiddlewareConfiguration
     {
         app.UseHangfireDashboard();
         
-        RecurringJob.AddOrUpdate<ParsingTaskJob>(
+        RecurringJob.AddOrUpdate<IParsingTaskJob>(
             "process-tasks", 
             job => job.ExecuteAsync(CancellationToken.None), 
+            Cron.Minutely);
+        
+        RecurringJob.AddOrUpdate<IProcessOutboxJobMessagesJob>(
+            "outbox-processes", 
+            job => job.ProcessOutboxMessages(CancellationToken.None), 
             Cron.Minutely);
         
         return app;
