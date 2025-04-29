@@ -1,6 +1,6 @@
 namespace OzonParserService.Application.ParsingTasks.Jobs;
 
-public interface IJob
+public interface IParsingTaskJob
 {
     Task ExecuteAsync(CancellationToken cancellationToken);
 }
