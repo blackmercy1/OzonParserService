@@ -1,7 +1,8 @@
+using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 using OzonParserService.Domain.ProductDataAggregate;
 
 namespace OzonParserService.Domain.ParserTaskAggregate.DomainEvents;
 
 public record ParserTaskCompletedEvent(
-    ParsingTask ParsingTask,
+    ParsingTaskId ParsingTaskId,
     ProductData ProductData) : IDomainEvent;

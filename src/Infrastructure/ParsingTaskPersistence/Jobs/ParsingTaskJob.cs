@@ -8,7 +8,7 @@ public class ParsingTaskJob(
     IParsingTaskRepository repository,
     IParsingTaskService taskService,
     ILogger<ParsingTaskJob> logger)
-    : IJob
+    : IParsingTaskJob
 {
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -16,7 +16,7 @@ public class ParsingTaskJob(
         {
             var tasks = await repository.GetDueTasksAsync(DateTime.UtcNow, cancellationToken);
 
-            foreach(var task in tasks) 
+            foreach (var task in tasks) 
                 await taskService.ExecuteTaskAsync(task.Id.Value, cancellationToken);
         }
         catch (Exception ex)

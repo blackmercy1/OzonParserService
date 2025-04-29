@@ -1,3 +1,5 @@
+using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
+
 namespace OzonParserService.Domain.ParserTaskAggregate.DomainEvents;
 
-public record ParserTaskStartedEvent(ParsingTask ParsingTask) : IDomainEvent;
+public record ParserTaskStartedEvent(ParsingTaskId Id) : IDomainEvent;
