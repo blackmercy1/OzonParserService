@@ -1,9 +1,12 @@
+using Newtonsoft.Json;
+
 namespace OzonParserService.Domain.ProductDataAggregate.ValueObject;
 
 public class ProductDataId : AggregateRootId<Guid>
 {
     public sealed override Guid Value { get; protected set; }
 
+    [JsonConstructor]
     private ProductDataId(Guid value)
     {
         Value = value;

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using OzonParserService.Domain.ProductDataAggregate.ValueObject;
 
 namespace OzonParserService.Domain.ProductDataAggregate;
@@ -9,6 +10,7 @@ public class ProductData : AggregateRoot<ProductDataId>
     public decimal CurrentPrice { get; private set; }
     public string Url { get; private set; }
 
+    [JsonConstructor]
     private ProductData(
         ProductDataId id,
         string externalId,
