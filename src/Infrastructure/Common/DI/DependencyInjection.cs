@@ -1,7 +1,14 @@
-﻿using OzonParserService.Application.ParsingTasks.Jobs;
+﻿using OzonParserService.Application.Outbox.Jobs;
+using OzonParserService.Application.Outbox.Repository;
+using OzonParserService.Application.ParsingTasks.Jobs;
 using OzonParserService.Application.ParsingTasks.Persistence;
 using OzonParserService.Application.ProductScraper;
+
+using OzonParserService.Infrastructure.Outbox;
+using OzonParserService.Infrastructure.Outbox.Jobs;
+using OzonParserService.Infrastructure.Outbox.Persistence;
 using OzonParserService.Infrastructure.ParsingTaskPersistence;
+
 using OzonParserService.Infrastructure.ParsingTaskPersistence.Jobs;
 using OzonParserService.Infrastructure.Persistence.Interceptors;
 using OzonParserService.Infrastructure.ProductData.Publisher;
@@ -22,6 +29,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services
+            .AddHangfireServices(configuration)
             .AddMassTransitServices(configuration)
             .AddDbContext<OzonDbContext>(options =>
             {
@@ -29,20 +37,32 @@ public static class DependencyInjection
             });
 
         services
-            .AddScoped<PublishDomainEventsInterceptor>()
+            .AddScoped<PublishOutboxMessagesInterceptor>()
             .AddScoped<IProductScraper, ProductScraper.ProductScraper>()
             .AddScoped<IParsingTaskRepository, ParsingTaskRepository>()
-            .AddScoped<IProductDataPublisher, ProductDataPublisher>()
-            .AddScoped<IJob, ParsingTaskJob>()
+            .AddScoped<IProductDataPublisher, ProductDataPublisher>();
+
+        services
+            .AddScoped<IParsingTaskJob, ParsingTaskJob>()
+            .AddScoped<IOutboxRepository<OutboxMessage>, OutboxRepository>()
+            .AddScoped<IProcessOutboxJobMessagesJob, ProcessOutboxMessageJob>();
+
+        services
             .AddSingleton<ITokenGenerator, JwtTokenGenerator>()
             .AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddHangfireServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
         services.AddHangfire(cfg =>
             cfg.UsePostgreSqlStorage(options
                 => options.UseNpgsqlConnection(configuration["ConnectionStrings:HangfireConnection"])));
-        services.AddHangfireServer();
-
-        return services;
+        
+        return services.AddHangfireServer();
     }
 
     private static IServiceCollection AddMassTransitServices(
