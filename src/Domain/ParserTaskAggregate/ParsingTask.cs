@@ -58,7 +58,7 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
         Status = ParserTaskStatus.Running;
         LastRun = DateTime.UtcNow;
 
-        AddDomainEvent(new ParserTaskStartedEvent(this));
+        AddDomainEvent(new ParserTaskStartedEvent(Id));
         return Result.Success;
     }
 
@@ -69,10 +69,8 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
         Status = ParserTaskStatus.Completed;
         NextRun = CalculateNextRun(utcNow);
 
-        AddDomainEvent(
-            new ParserTaskCompletedEvent(
-                this,
-                productData));
+        AddDomainEvent(new ParserTaskCompletedEvent(Id, productData));
+        
         return Result.Success;
     }
 
