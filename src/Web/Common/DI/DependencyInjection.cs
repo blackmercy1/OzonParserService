@@ -1,4 +1,5 @@
 ﻿using OzonParserService.Application.ParsingTasks.Commands;
+using OzonParserService.Web.Handlers;
 
 namespace OzonParserService.Web.Common.DI;
 
@@ -13,12 +14,11 @@ public static class DependencyInjection
             .AddNewtonsoftJson();
 
         builder.Services
-            .AddEndpointsApiExplorer()
-            .AddSingleton<ProblemDetailsFactory, ParserProblemDetailsFactory>();
-
-        builder.Services
+            .AddExceptionHandler<GlobalExceptionHandler>()
+            .AddProblemDetails()
             .AddSerilogServices(builder)
             .AddFluentValidation()
+            .AddEndpointsApiExplorer()
             .AddAutoMapper()
             .AddSwagger()
             .AddCors(options =>
