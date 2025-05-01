@@ -5,14 +5,11 @@ global using OzonParserService.Web.Configuration;
 
 global using OzonParserService.Web.Http;
 global using OzonParserService.Web.Common.Controllers;
-global using OzonParserService.Web.Common.Errors;
-
-global using Microsoft.Extensions.Options;
 global using System.Diagnostics;
 
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ModelBinding;
-global using Microsoft.AspNetCore.Mvc.Infrastructure;
+
 global using Microsoft.OpenApi.Models;
 
 global using Serilog;
