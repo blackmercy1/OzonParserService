@@ -1,7 +1,8 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace OzonParserService.Web.Handlers;
 
@@ -10,9 +11,11 @@ public class GlobalExceptionHandler(IHostEnvironment env, ILogger<GlobalExceptio
 {
     private const string UnhandledExceptionMsg = "An unhandled exception has occurred while executing the request.";
 
-    private readonly static JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web)
+    private readonly static JsonSerializerSettings SerializerSettings = new()
     {
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+        Converters = { new StringEnumConverter() },
+        NullValueHandling = NullValueHandling.Ignore
     };
 
     public async ValueTask<bool> TryHandleAsync(
@@ -46,11 +49,10 @@ public class GlobalExceptionHandler(IHostEnvironment env, ILogger<GlobalExceptio
             Type = "https://datatracker.ietf.org/doc/html/rfc7231",
             Status = statusCode,
             Title = reasonPhrase,
-            Extensions =
-            {
-                [nameof(errorCode)] = errorCode
-            }
         };
+
+        // Using dictionary for extensions in Newtonsoft
+        problemDetails.Extensions[nameof(errorCode)] = errorCode;
 
         if (!env.IsDevelopment())
             return problemDetails;
@@ -67,7 +69,7 @@ public class GlobalExceptionHandler(IHostEnvironment env, ILogger<GlobalExceptio
     {
         try
         {
-            return JsonSerializer.Serialize(problemDetails, SerializerOptions);
+            return JsonConvert.SerializeObject(problemDetails, SerializerSettings);
         }
         catch (Exception ex)
         {
