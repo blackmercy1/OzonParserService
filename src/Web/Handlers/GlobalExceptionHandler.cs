@@ -49,10 +49,11 @@ public class GlobalExceptionHandler(IHostEnvironment env, ILogger<GlobalExceptio
             Type = "https://datatracker.ietf.org/doc/html/rfc7231",
             Status = statusCode,
             Title = reasonPhrase,
+            Extensions =
+            {
+                [nameof(errorCode)] = errorCode
+            }
         };
-
-        // Using dictionary for extensions in Newtonsoft
-        problemDetails.Extensions[nameof(errorCode)] = errorCode;
 
         if (!env.IsDevelopment())
             return problemDetails;

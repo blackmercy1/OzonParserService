@@ -16,7 +16,7 @@ public class ParsingTaskConfiguration : IEntityTypeConfiguration<ParsingTask>
     {
         builder
             .ToTable("parser_tasks");
-        
+
         builder
             .HasKey(x => x.Id);
 
@@ -30,19 +30,19 @@ public class ParsingTaskConfiguration : IEntityTypeConfiguration<ParsingTask>
         builder
             .Property(x => x.ProductUrl)
             .IsRequired();
-        
+
         builder
             .Property(x => x.CheckInterval)
             .IsRequired();
-        
+
         builder
             .Property(x => x.Status)
             .IsRequired();
-        
+
         builder
             .Property(x => x.LastRun)
             .IsRequired();
-        
+
         builder
             .Property(x => x.NextRun)
             .IsRequired();

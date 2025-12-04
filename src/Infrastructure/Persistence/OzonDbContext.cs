@@ -8,7 +8,7 @@ public class OzonDbContext(
     PublishOutboxMessagesInterceptor publishOutboxMessagesInterceptor,
     DbContextOptions<OzonDbContext> options) : DbContext(options)
 {
-    public DbSet<ParsingTask> ParsingTasks { get; set; }
+    public DbSet<ParsingTask> ParsingTasks { get; set; } 
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(

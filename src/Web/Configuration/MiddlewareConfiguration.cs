@@ -10,8 +10,7 @@ public static class MiddlewareConfiguration
         app
             .UseSerilogRequestLogging()
             .UseExceptionHandler(opt => { });
-
-
+        
         if (app.Environment.IsDevelopment())
             app.ConfigureSwaggerGen(app);
         else

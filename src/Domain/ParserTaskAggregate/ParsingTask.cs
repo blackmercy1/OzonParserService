@@ -1,10 +1,11 @@
+using System.Text.RegularExpressions;
 using OzonParserService.Domain.ParserTaskAggregate.DomainEvents;
 using OzonParserService.Domain.ParserTaskAggregate.ValueObject;
 using OzonParserService.Domain.ProductDataAggregate;
 
 namespace OzonParserService.Domain.ParserTaskAggregate;
 
-public class ParsingTask : AggregateRoot<ParsingTaskId>
+public partial class ParsingTask : AggregateRoot<ParsingTaskId>
 {
     public string ProductUrl { get; private set; }
     public string ExternalProductId { get; private set; }
@@ -37,17 +38,21 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
         TimeSpan checkInterval,
         DateTime utcNow)
     {
+        if (checkInterval <= TimeSpan.Zero)
+            throw new ArgumentException("Check interval must be positive.", nameof(checkInterval));
+        
         if (!IsValidOzonUrl(productUrl))
-            throw new ArgumentException(
-                "Invalid Ozon URL",
-                nameof(productUrl));
+            throw new ArgumentException("Invalid Ozon URL", nameof(productUrl));
 
-        var externalId = ExtractExternalId(productUrl);
-
+        var externalIdResult = ExtractExternalId(productUrl);
+        
+        if (externalIdResult.IsError)
+            throw new Exception(externalIdResult.Errors.ToString());
+        
         return new ParsingTask(
             id: ParsingTaskId.CreateUnique(),
             productUrl: productUrl,
-            externalProductId: externalId,
+            externalProductId: externalIdResult.Value,
             checkInterval: checkInterval,
             utcNow: utcNow
         );
@@ -77,18 +82,19 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
     public ErrorOr<Success> Fail(string error)
     {
         Status = ParserTaskStatus.Failed;
-        return Result.Success;
+        AddDomainEvent(new ParserTaskFailedEvent(Id, error));
+        return Error.Failure(description: error);
     }
 
     private DateTime CalculateNextRun(DateTime currentTime) => currentTime.Add(CheckInterval);
 
-    private static string ExtractExternalId(string url)
+    private static ErrorOr<string> ExtractExternalId(string url)
     {
-        var parts = url.Split('/');
-        if (parts.Length == 0)
-            throw new ArgumentException("URL does not contain product ID");
-
-        return parts.Last();
+        var regex = OzonRegex();
+        var match = regex.Match(url);
+        if (!match.Success)
+            return Error.Failure("URL does not contain product ID");
+        return match.Groups[1].Value;
     }
 
     private static bool IsValidOzonUrl(string url) =>
@@ -102,4 +108,6 @@ public class ParsingTask : AggregateRoot<ParsingTaskId>
     private ParsingTask()
     { }
 #pragma warning restore CS8618
+    [GeneratedRegex(@"ozon\.ru/.*?/(\d+)/")]
+    private static partial Regex OzonRegex();
 }
